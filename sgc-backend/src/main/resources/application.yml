@@ -1,0 +1,91 @@
+# =====================================================
+# SGC - Sistema de Gestão de Compliance
+# Configuração Principal (application.yml)
+# =====================================================
+
+spring:
+  application:
+    name: sgc-backend
+
+  # Perfil ativo (dev, prod)
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+  # Jackson (JSON)
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: true
+    time-zone: America/Sao_Paulo
+    default-property-inclusion: non_null
+
+  # JPA/Hibernate
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        jdbc:
+          time_zone: America/Sao_Paulo
+
+  # Flyway
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    locations: classpath:db/migration
+
+# Server
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: on_param
+    include-exception: false
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.compliance.sgc: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+# API Documentation (SpringDoc OpenAPI)
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: alpha
+    tags-sorter: alpha
+  show-actuator: false
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:c2djLWNvbXBsaWFuY2Utc2VjcmV0LWtleS1jaGFuZ2UtaW4tcHJvZHVjdGlvbi0yMDI1}
+  expiration: ${JWT_EXPIRATION:86400000} # 24 horas em ms
+  refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000} # 7 dias em ms
+  issuer: SGC-Backend
+
+# File Upload
+file:
+  upload:
+    directory: ${FILE_UPLOAD_DIR:./uploads}
+    max-file-size: ${FILE_MAX_SIZE:10485760} # 10MB em bytes
+    allowed-extensions: pdf,docx,xlsx,png,jpg,jpeg
+
+# CORS
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
+  allowed-methods: GET,POST,PUT,DELETE,PATCH,OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+  max-age: 3600

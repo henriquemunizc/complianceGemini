@@ -1,0 +1,49 @@
+# =====================================================
+# SGC - Configuração de Testes (test)
+# =====================================================
+
+spring:
+  # DataSource (H2 in-memory para testes)
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MSSQLServer;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  # H2 Console (para debug de testes)
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  # JPA/Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: create-drop # Cria e destroi o schema a cada teste
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+
+  # Flyway (desabilitado para testes - usamos ddl-auto)
+  flyway:
+    enabled: false
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.compliance.sgc: DEBUG
+    org.springframework.test: DEBUG
+    org.hibernate.SQL: DEBUG
+
+# JWT (chave simples para testes)
+jwt:
+  secret: test-secret-key-for-unit-tests
+  expiration: 3600000
+
+# File Upload (diretório temporário para testes)
+file:
+  upload:
+    directory: ./target/test-uploads

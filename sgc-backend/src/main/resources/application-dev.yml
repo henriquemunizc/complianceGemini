@@ -1,0 +1,61 @@
+# =====================================================
+# SGC - Configuração de Desenvolvimento (dev)
+# =====================================================
+
+spring:
+  # DataSource (SQL Server)
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;databaseName=SGC_Compliance;encrypt=true;trustServerCertificate=true
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:SgcAdmin@2025}
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # JPA/Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: validate # Flyway gerencia o schema
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServerDialect
+        enable_lazy_load_no_trans: false
+
+  # Flyway
+  flyway:
+    locations: classpath:db/migration
+
+# Server
+server:
+  port: 8080
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.compliance.sgc: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"
+
+# CORS (permite localhost Angular)
+cors:
+  allowed-origins: http://localhost:4200,http://localhost:3000
+
+# JWT (dev - chave mais simples para debug)
+jwt:
+  secret: dev-secret-key-change-in-production
+  expiration: 86400000 # 24 horas
+
+# File Upload (dev - diretório local)
+file:
+  upload:
+    directory: ./uploads
