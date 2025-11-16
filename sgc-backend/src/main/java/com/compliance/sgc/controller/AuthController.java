@@ -7,6 +7,13 @@ import com.compliance.sgc.exception.BusinessValidationException;
 import com.compliance.sgc.exception.EntityNotFoundException;
 import com.compliance.sgc.repository.UsuarioRepository;
 import com.compliance.sgc.security.JwtTokenProvider;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/v1/auth")
+@Tag(name = "Autenticação", description = "Endpoints públicos para autenticação no sistema")
 public class AuthController {
 
   private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -55,6 +63,14 @@ public class AuthController {
    * @return LoginResponse com token JWT
    */
   @PostMapping("/login")
+  @Operation(summary = "Autenticar usuário", description = "Autentica o usuário com email e senha, retornando um token JWT para uso nas demais requisições")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Login realizado com sucesso",
+          content = @Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponse.class))),
+      @ApiResponse(responseCode = "400", description = "Credenciais inválidas ou usuário inativo", content = @Content),
+      @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content)
+  })
+  @SecurityRequirements // Remove o requirement global de JWT para este endpoint público
   public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
     try {
       // Valida se usuário existe e está ativo ANTES de tentar autenticar

@@ -6,6 +6,13 @@ import com.compliance.sgc.dto.evidencia.EvidenciaResponseDTO;
 import com.compliance.sgc.exception.EntityNotFoundException;
 import com.compliance.sgc.repository.EvidenciaRepository;
 import com.compliance.sgc.service.EvidenciaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.io.IOException;
@@ -22,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/evidencias")
+@Tag(name = "Evidências", description = "Endpoints para gerenciamento de evidências de cumprimento de obrigações")
 public class EvidenciaController {
 
   private static final Logger logger = LoggerFactory.getLogger(EvidenciaController.class);
@@ -36,10 +44,17 @@ public class EvidenciaController {
   }
 
   @PostMapping("/obrigacao/{obrigacaoId}/arquivo")
+  @Operation(summary = "Adicionar evidência (arquivo)", description = "Faz upload de um arquivo como evidência de cumprimento")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "Arquivo enviado com sucesso",
+          content = @Content(mediaType = "application/json", schema = @Schema(implementation = EvidenciaResponseDTO.class))),
+      @ApiResponse(responseCode = "404", description = "Obrigação não encontrada", content = @Content),
+      @ApiResponse(responseCode = "400", description = "Arquivo inválido", content = @Content)
+  })
   public ResponseEntity<EvidenciaResponseDTO> adicionarArquivo(
-      @PathVariable Long obrigacaoId,
-      @RequestParam("arquivo") MultipartFile arquivo,
-      @RequestParam(required = false) String descricao) {
+      @Parameter(description = "ID da obrigação") @PathVariable Long obrigacaoId,
+      @Parameter(description = "Arquivo de evidência") @RequestParam("arquivo") MultipartFile arquivo,
+      @Parameter(description = "Descrição da evidência") @RequestParam(required = false) String descricao) {
     logger.info(
         "POST /api/v1/evidencias/obrigacao/{}/arquivo - Upload de arquivo", obrigacaoId);
     EvidenciaResponseDTO response =
@@ -48,32 +63,58 @@ public class EvidenciaController {
   }
 
   @PostMapping("/obrigacao/{obrigacaoId}/link")
+  @Operation(summary = "Adicionar evidência (link)", description = "Adiciona um link externo como evidência de cumprimento")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "Link adicionado com sucesso",
+          content = @Content(mediaType = "application/json", schema = @Schema(implementation = EvidenciaResponseDTO.class))),
+      @ApiResponse(responseCode = "404", description = "Obrigação não encontrada", content = @Content)
+  })
   public ResponseEntity<EvidenciaResponseDTO> adicionarLink(
-      @PathVariable Long obrigacaoId, @Valid @RequestBody EvidenciaCreateDTO dto) {
+      @Parameter(description = "ID da obrigação") @PathVariable Long obrigacaoId,
+      @Valid @RequestBody EvidenciaCreateDTO dto) {
     logger.info("POST /api/v1/evidencias/obrigacao/{}/link - Adicionar link", obrigacaoId);
     EvidenciaResponseDTO response = evidenciaService.adicionarEvidenciaLink(obrigacaoId, dto);
     return new ResponseEntity<>(response, HttpStatus.CREATED);
   }
 
   @PostMapping("/obrigacao/{obrigacaoId}/texto")
+  @Operation(summary = "Adicionar evidência (texto)", description = "Adiciona um texto descritivo como evidência de cumprimento")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "Texto adicionado com sucesso",
+          content = @Content(mediaType = "application/json", schema = @Schema(implementation = EvidenciaResponseDTO.class))),
+      @ApiResponse(responseCode = "404", description = "Obrigação não encontrada", content = @Content)
+  })
   public ResponseEntity<EvidenciaResponseDTO> adicionarTexto(
-      @PathVariable Long obrigacaoId, @Valid @RequestBody EvidenciaCreateDTO dto) {
+      @Parameter(description = "ID da obrigação") @PathVariable Long obrigacaoId,
+      @Valid @RequestBody EvidenciaCreateDTO dto) {
     logger.info("POST /api/v1/evidencias/obrigacao/{}/texto - Adicionar texto", obrigacaoId);
     EvidenciaResponseDTO response = evidenciaService.adicionarEvidenciaTexto(obrigacaoId, dto);
     return new ResponseEntity<>(response, HttpStatus.CREATED);
   }
 
   @GetMapping("/obrigacao/{obrigacaoId}")
+  @Operation(summary = "Listar evidências por obrigação", description = "Retorna todas as evidências vinculadas a uma obrigação")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Lista de evidências retornada com sucesso"),
+      @ApiResponse(responseCode = "404", description = "Obrigação não encontrada", content = @Content)
+  })
   public ResponseEntity<List<EvidenciaResponseDTO>> listarPorObrigacao(
-      @PathVariable Long obrigacaoId) {
+      @Parameter(description = "ID da obrigação") @PathVariable Long obrigacaoId) {
     logger.debug("GET /api/v1/evidencias/obrigacao/{} - Listar evidências", obrigacaoId);
     List<EvidenciaResponseDTO> response = evidenciaService.listarPorObrigacao(obrigacaoId);
     return ResponseEntity.ok(response);
   }
 
   @GetMapping("/{id}/download")
+  @Operation(summary = "Download de arquivo de evidência", description = "Faz download do arquivo de uma evidência")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Arquivo retornado com sucesso"),
+      @ApiResponse(responseCode = "404", description = "Evidência não encontrada", content = @Content),
+      @ApiResponse(responseCode = "400", description = "Evidência não é do tipo arquivo", content = @Content)
+  })
   public ResponseEntity<Resource> downloadArquivo(
-      @PathVariable Long id, HttpServletRequest request) {
+      @Parameter(description = "ID da evidência") @PathVariable Long id,
+      HttpServletRequest request) {
     logger.info("GET /api/v1/evidencias/{}/download - Download de arquivo", id);
 
     // Carregar recurso
@@ -106,7 +147,13 @@ public class EvidenciaController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> excluir(@PathVariable Long id) {
+  @Operation(summary = "Excluir evidência", description = "Remove uma evidência (arquivo será deletado se for do tipo arquivo)")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Evidência excluída com sucesso"),
+      @ApiResponse(responseCode = "404", description = "Evidência não encontrada", content = @Content)
+  })
+  public ResponseEntity<Void> excluir(
+      @Parameter(description = "ID da evidência") @PathVariable Long id) {
     logger.info("DELETE /api/v1/evidencias/{} - Excluir evidência", id);
     evidenciaService.excluir(id);
     return ResponseEntity.noContent().build();

@@ -57,4 +57,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
    * @return Lista de usuários
    */
   List<Usuario> findByPerfilAndAtivo(PerfilUsuario perfil, Boolean ativo);
+
+  /**
+   * Conta usuários por status ativo.
+   *
+   * @param ativo Status de ativo
+   * @return Quantidade de usuários
+   */
+  Long countByAtivo(Boolean ativo);
 }

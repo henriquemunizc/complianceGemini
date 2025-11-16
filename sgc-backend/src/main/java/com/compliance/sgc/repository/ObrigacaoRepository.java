@@ -25,4 +25,6 @@ public interface ObrigacaoRepository extends JpaRepository<Obrigacao, Long>, Jpa
 
   @Query("SELECT COUNT(o) FROM Obrigacao o WHERE o.responsavel = :responsavel AND o.status = :status AND o.ativo = true")
   Long countByResponsavelAndStatus(@Param("responsavel") Usuario responsavel, @Param("status") StatusObrigacao status);
+
+  Long countByAtivo(Boolean ativo);
 }

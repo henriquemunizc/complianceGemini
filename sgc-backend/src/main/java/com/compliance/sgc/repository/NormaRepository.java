@@ -24,4 +24,6 @@ public interface NormaRepository extends JpaRepository<Norma, Long>, JpaSpecific
   @Query(
       "SELECT n FROM Norma n WHERE n.dataPublicacao <= :data AND (n.dataRevogacao IS NULL OR n.dataRevogacao > :data) AND n.ativo = true")
   List<Norma> findNormasVigentes(@Param("data") LocalDate data);
+
+  Long countByAtivo(Boolean ativo);
 }
