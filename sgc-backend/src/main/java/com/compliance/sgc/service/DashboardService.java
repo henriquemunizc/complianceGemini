@@ -1,5 +1,6 @@
 package com.compliance.sgc.service;
 
+import com.compliance.sgc.config.CacheConfig;
 import com.compliance.sgc.domain.enums.StatusObrigacao;
 import com.compliance.sgc.dto.dashboard.DashboardResponseDTO;
 import com.compliance.sgc.repository.NormaRepository;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,9 +46,11 @@ public class DashboardService {
   /**
    * Obtém as métricas do dashboard.
    * Todos os usuários autenticados podem acessar.
+   * Cache: 5 minutos (performance optimization)
    *
    * @return DashboardResponseDTO com as métricas
    */
+  @Cacheable(value = CacheConfig.CACHE_DASHBOARD, unless = "#result == null")
   @PreAuthorize("hasAnyRole('RESPONSAVEL', 'COMPLIANCE', 'ADMIN', 'VISUALIZADOR')")
   public DashboardResponseDTO obterMetricas() {
     logger.debug("Obtendo métricas do dashboard");

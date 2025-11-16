@@ -107,7 +107,7 @@ public class SecurityConfig {
         .exceptionHandling(exception -> exception
             .authenticationEntryPoint(jwtAuthenticationEntryPoint))
 
-        // Configura headers de segurança (proteção OWASP)
+        // Configura headers de segurança (proteção OWASP ASVS 4.0 Level 2)
         .headers(headers -> headers
             .frameOptions(frameOptions -> frameOptions.deny()) // X-Frame-Options: DENY
             .contentTypeOptions(contentType -> contentType.disable()) // X-Content-Type-Options
@@ -115,6 +115,12 @@ public class SecurityConfig {
             .httpStrictTransportSecurity(hsts -> hsts
                 .includeSubDomains(true)
                 .maxAgeInSeconds(31536000)) // HSTS
+            .contentSecurityPolicy(csp -> csp
+                .policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'"))
+            .referrerPolicy(referrer -> referrer
+                .policy(org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+            .permissionsPolicy(permissions -> permissions
+                .policy("geolocation=(), microphone=(), camera=()"))
         )
 
         // Configura regras de autorização

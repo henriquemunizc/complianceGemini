@@ -1,0 +1,213 @@
+/**
+ * Design Tokens - Sistema de Design SGC
+ * Inspirado em Atlassian Design System, IBM Carbon e Material Design
+ *
+ * Uso: var(--color-primary), var(--spacing-md), etc.
+ */
+
+:root {
+  /* ========================================
+     CORES - Paleta Profissional
+     ======================================== */
+
+  /* Primary - Azul Profissional (Atlassian Style) */
+  --color-primary: #0052CC;
+  --color-primary-dark: #0747A6;
+  --color-primary-light: #4C9AFF;
+  --color-primary-lighter: #B3D4FF;
+  --color-primary-lightest: #DEEBFF;
+
+  /* Secondary - Roxo */
+  --color-secondary: #6554C0;
+  --color-secondary-dark: #5243AA;
+  --color-secondary-light: #8777D9;
+  --color-secondary-lighter: #B3A8E8;
+  --color-secondary-lightest: #EAE6FF;
+
+  /* Success - Verde */
+  --color-success: #00875A;
+  --color-success-dark: #006644;
+  --color-success-light: #57D9A3;
+  --color-success-lighter: #ABF5D1;
+  --color-success-lightest: #E3FCEF;
+
+  /* Warning - Laranja */
+  --color-warning: #FF991F;
+  --color-warning-dark: #FF8B00;
+  --color-warning-light: #FFAB00;
+  --color-warning-lighter: #FFC400;
+  --color-warning-lightest: #FFF0B3;
+
+  /* Danger - Vermelho */
+  --color-danger: #DE350B;
+  --color-danger-dark: #BF2600;
+  --color-danger-light: #FF5630;
+  --color-danger-lighter: #FF8F73;
+  --color-danger-lightest: #FFEBE6;
+
+  /* Info - Azul Claro */
+  --color-info: #0065FF;
+  --color-info-dark: #0052CC;
+  --color-info-light: #4C9AFF;
+  --color-info-lighter: #B3D4FF;
+  --color-info-lightest: #DEEBFF;
+
+  /* Neutral - Escala de Cinzas */
+  --color-neutral-50: #FAFBFC;
+  --color-neutral-100: #F4F5F7;
+  --color-neutral-200: #EBECF0;
+  --color-neutral-300: #DFE1E6;
+  --color-neutral-400: #C1C7D0;
+  --color-neutral-500: #A5ADBA;
+  --color-neutral-600: #7A869A;
+  --color-neutral-700: #505F79;
+  --color-neutral-800: #344563;
+  --color-neutral-900: #172B4D;
+  --color-neutral-1000: #091E42;
+
+  /* Background */
+  --color-background: #FFFFFF;
+  --color-background-light: #FAFBFC;
+  --color-background-medium: #F4F5F7;
+  --color-background-dark: #EBECF0;
+
+  /* Text */
+  --color-text-primary: #172B4D;
+  --color-text-secondary: #505F79;
+  --color-text-tertiary: #7A869A;
+  --color-text-disabled: #A5ADBA;
+  --color-text-inverse: #FFFFFF;
+
+  /* Border */
+  --color-border-light: #EBECF0;
+  --color-border-medium: #DFE1E6;
+  --color-border-dark: #C1C7D0;
+
+  /* ========================================
+     TIPOGRAFIA
+     ======================================== */
+
+  /* Font Family */
+  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* Font Sizes */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.25rem;    /* 20px */
+  --font-size-xl: 1.5rem;     /* 24px */
+  --font-size-2xl: 2rem;      /* 32px */
+  --font-size-3xl: 2.5rem;    /* 40px */
+  --font-size-4xl: 3rem;      /* 48px */
+
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.4;
+  --line-height-relaxed: 1.6;
+  --line-height-loose: 1.8;
+
+  /* ========================================
+     ESPAÇAMENTOS
+     ======================================== */
+
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 0.75rem;   /* 12px */
+  --spacing-lg: 1rem;      /* 16px */
+  --spacing-xl: 1.5rem;    /* 24px */
+  --spacing-2xl: 2rem;     /* 32px */
+  --spacing-3xl: 3rem;     /* 48px */
+  --spacing-4xl: 4rem;     /* 64px */
+
+  /* ========================================
+     BORDER RADIUS
+     ======================================== */
+
+  --radius-xs: 0.25rem;  /* 4px */
+  --radius-sm: 0.5rem;   /* 8px */
+  --radius-md: 0.75rem;  /* 12px */
+  --radius-lg: 1rem;     /* 16px */
+  --radius-full: 9999px; /* Círculo */
+
+  /* ========================================
+     SHADOWS - Material Design Style
+     ======================================== */
+
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  /* ========================================
+     Z-INDEX - Camadas
+     ======================================== */
+
+  --z-index-dropdown: 1000;
+  --z-index-sticky: 1100;
+  --z-index-fixed: 1200;
+  --z-index-modal-backdrop: 1300;
+  --z-index-modal: 2000;
+  --z-index-toast: 3000;
+  --z-index-tooltip: 4000;
+
+  /* ========================================
+     TRANSITIONS
+     ======================================== */
+
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+
+  /* ========================================
+     BREAKPOINTS (para referência)
+     ======================================== */
+
+  --breakpoint-xs: 0;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-xxl: 1400px;
+}
+
+/* ========================================
+   CLASSES UTILITÁRIAS
+   ======================================== */
+
+/* Cores de Texto */
+.text-primary { color: var(--color-primary) !important; }
+.text-secondary { color: var(--color-secondary) !important; }
+.text-success { color: var(--color-success) !important; }
+.text-warning { color: var(--color-warning) !important; }
+.text-danger { color: var(--color-danger) !important; }
+.text-info { color: var(--color-info) !important; }
+.text-muted { color: var(--color-text-secondary) !important; }
+
+/* Cores de Background */
+.bg-primary { background-color: var(--color-primary) !important; color: white; }
+.bg-success { background-color: var(--color-success) !important; color: white; }
+.bg-warning { background-color: var(--color-warning) !important; color: white; }
+.bg-danger { background-color: var(--color-danger) !important; color: white; }
+.bg-info { background-color: var(--color-info) !important; color: white; }
+.bg-light { background-color: var(--color-background-light) !important; }
+
+/* Shadows */
+.shadow-sm { box-shadow: var(--shadow-sm) !important; }
+.shadow-md { box-shadow: var(--shadow-md) !important; }
+.shadow-lg { box-shadow: var(--shadow-lg) !important; }
+.shadow-xl { box-shadow: var(--shadow-xl) !important; }
+
+/* Border Radius */
+.rounded-sm { border-radius: var(--radius-sm) !important; }
+.rounded-md { border-radius: var(--radius-md) !important; }
+.rounded-lg { border-radius: var(--radius-lg) !important; }
+.rounded-full { border-radius: var(--radius-full) !important; }

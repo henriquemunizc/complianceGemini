@@ -1,0 +1,235 @@
+/**
+ * Estilos de Acessibilidade WCAG 2.1 AA
+ * SGC - Sistema de Gestão de Compliance
+ *
+ * Conformidade:
+ * - Contraste mínimo 4.5:1 para texto normal
+ * - Contraste mínimo 3:1 para texto grande (18pt+)
+ * - Estados de foco visíveis (2px outline)
+ * - Touch targets mínimo 44x44px
+ *
+ * @author Accessibility Team
+ * @version 1.0
+ */
+
+/* ===========================================================================
+   Focus Indicators (WCAG 2.4.7)
+   =========================================================================== */
+
+*:focus,
+*:focus-visible {
+  outline: 2px solid #2196F3;
+  outline-offset: 2px;
+  transition: outline-offset 0.2s ease;
+}
+
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #2196F3;
+  outline-offset: 2px;
+}
+
+/* ===========================================================================
+   Skip Links (WCAG 2.4.1)
+   =========================================================================== */
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #2196F3;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 0 0 4px 0;
+  z-index: 9999;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ===========================================================================
+   High Contrast Mode Support
+   =========================================================================== */
+
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor !important;
+  }
+
+  button,
+  .p-button {
+    border: 2px solid currentColor !important;
+  }
+}
+
+/* ===========================================================================
+   Reduced Motion (WCAG 2.3.3)
+   =========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===========================================================================
+   Touch Targets (WCAG 2.5.5)
+   =========================================================================== */
+
+button,
+.p-button,
+a[role="button"],
+input[type="checkbox"],
+input[type="radio"] {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 12px;
+}
+
+/* ===========================================================================
+   Screen Reader Only (SR-only)
+   =========================================================================== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* ===========================================================================
+   Color Contrast Fixes (WCAG 1.4.3)
+   =========================================================================== */
+
+/* Texto em fundos claros */
+.text-muted,
+.user-role {
+  color: #495057 !important; /* Contraste 4.6:1 */
+}
+
+/* Links */
+a {
+  color: #0056b3; /* Contraste 4.5:1 */
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #003d82; /* Contraste 7:1 */
+}
+
+/* Estados de erro */
+.text-danger,
+.p-error {
+  color: #c82333 !important; /* Contraste 4.5:1 */
+}
+
+/* Estados de sucesso */
+.text-success,
+.p-success {
+  color: #1e7e34 !important; /* Contraste 4.5:1 */
+}
+
+/* Estados de aviso */
+.text-warning,
+.p-warning {
+  color: #856404 !important; /* Contraste 4.5:1 */
+  background-color: #fff3cd !important;
+}
+
+/* ===========================================================================
+   Responsive Typography (WCAG 1.4.4)
+   =========================================================================== */
+
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* Zoom até 200% sem scroll horizontal */
+@media (min-width: 1280px) {
+  .container {
+    max-width: 100%;
+  }
+}
+
+/* ===========================================================================
+   Loading States (aria-busy)
+   =========================================================================== */
+
+[aria-busy="true"] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+[aria-busy="true"]::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #2196F3;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===========================================================================
+   Error Messages (WCAG 3.3.1)
+   =========================================================================== */
+
+.error-message,
+[role="alert"] {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.error-message::before,
+[role="alert"]::before {
+  content: "⚠ ";
+  font-weight: bold;
+}

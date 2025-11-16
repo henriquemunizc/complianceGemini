@@ -18,6 +18,8 @@ import { EvidenciaResponse, TipoEvidencia } from '../models/evidencia.model';
 import { PerfilUsuario } from '../models/auth.model';
 import { ObrigacaoTimelineComponent } from './obrigacao-timeline.component';
 import { EvidenciaUploadComponent } from './evidencia-upload.component';
+import { CommentSectionComponent } from './comment-section.component';
+import { AuditLogComponent } from './audit-log.component';
 
 @Component({
   selector: 'app-obrigacao-detail',
@@ -33,7 +35,9 @@ import { EvidenciaUploadComponent } from './evidencia-upload.component';
     ToastModule,
     ConfirmDialogModule,
     ObrigacaoTimelineComponent,
-    EvidenciaUploadComponent
+    EvidenciaUploadComponent,
+    CommentSectionComponent,
+    AuditLogComponent
   ],
   providers: [MessageService, ConfirmationService],
   template: `
@@ -241,6 +245,16 @@ import { EvidenciaUploadComponent } from './evidencia-upload.component';
         <p-tabViewPanel header="Histórico" leftIcon="pi pi-history">
           <app-obrigacao-timeline [obrigacaoId]="obrigacao.obrigacaoId"></app-obrigacao-timeline>
         </p-tabViewPanel>
+
+        <!-- Aba Comentários -->
+        <p-tabViewPanel header="Comentários" leftIcon="pi pi-comments">
+          <app-comment-section [obrigacaoId]="obrigacao.obrigacaoId"></app-comment-section>
+        </p-tabViewPanel>
+
+        <!-- Aba Auditoria (apenas ADMIN) -->
+        <p-tabViewPanel *ngIf="isAdmin" header="Auditoria" leftIcon="pi pi-shield">
+          <app-audit-log entidade="Obrigacao" [entidadeId]="obrigacao.obrigacaoId"></app-audit-log>
+        </p-tabViewPanel>
       </p-tabView>
     </div>
 
@@ -282,6 +296,10 @@ export class ObrigacaoDetailComponent implements OnInit {
   get canApprove(): boolean {
     return this.obrigacao?.status === StatusObrigacao.SUBMETIDA &&
       this.authService.hasAnyRole([PerfilUsuario.ROLE_COMPLIANCE, PerfilUsuario.ROLE_ADMIN]);
+  }
+
+  get isAdmin(): boolean {
+    return this.authService.hasRole(PerfilUsuario.ROLE_ADMIN);
   }
 
   ngOnInit(): void {

@@ -6,11 +6,13 @@ import { AvatarModule } from 'primeng/avatar';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from '../services/auth.service';
 import { PerfilUsuario } from '../models/auth.model';
+import { GlobalSearchComponent } from './global-search.component';
+import { NotificationBellComponent } from './notification-bell.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule, MenubarModule, AvatarModule],
+  imports: [CommonModule, RouterModule, MenubarModule, AvatarModule, GlobalSearchComponent, NotificationBellComponent],
   template: `
     <div class="navbar-container">
       <p-menubar [model]="menuItems">
@@ -21,23 +23,27 @@ import { PerfilUsuario } from '../models/auth.model';
           </div>
         </ng-template>
         <ng-template pTemplate="end">
-          <div class="navbar-user">
-            <p-avatar
-              [label]="getUserInitials()"
-              shape="circle"
-              styleClass="user-avatar"
-            ></p-avatar>
-            <div class="user-info">
-              <span class="user-name">{{ getUserName() }}</span>
-              <span class="user-role">{{ getUserRole() }}</span>
+          <div class="navbar-actions">
+            <app-global-search></app-global-search>
+            <app-notification-bell></app-notification-bell>
+            <div class="navbar-user">
+              <p-avatar
+                [label]="getUserInitials()"
+                shape="circle"
+                styleClass="user-avatar"
+              ></p-avatar>
+              <div class="user-info">
+                <span class="user-name">{{ getUserName() }}</span>
+                <span class="user-role">{{ getUserRole() }}</span>
+              </div>
+              <button
+                class="logout-button"
+                (click)="logout()"
+                title="Sair"
+              >
+                <i class="pi pi-sign-out"></i>
+              </button>
             </div>
-            <button
-              class="logout-button"
-              (click)="logout()"
-              title="Sair"
-            >
-              <i class="pi pi-sign-out"></i>
-            </button>
           </div>
         </ng-template>
       </p-menubar>
@@ -67,6 +73,12 @@ import { PerfilUsuario } from '../models/auth.model';
 
     .brand-text {
       color: #333;
+    }
+
+    .navbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
     }
 
     .navbar-user {

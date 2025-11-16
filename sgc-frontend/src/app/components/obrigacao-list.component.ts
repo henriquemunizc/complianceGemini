@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -8,11 +8,17 @@ import { TagModule } from 'primeng/tag';
 import { DropdownModule } from 'primeng/dropdown';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { VirtualScrollerModule } from 'primeng/virtualscroller';
+import { ChipModule } from 'primeng/chip';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { ObrigacaoService } from '../services/obrigacao.service';
 import { AuthService } from '../services/auth.service';
 import { ObrigacaoResponse, StatusObrigacao } from '../models/obrigacao.model';
 import { PerfilUsuario } from '../models/auth.model';
+import { AdvancedFilterComponent, FilterConfig } from '../shared/components/advanced-filter.component';
+import { ExportButtonComponent } from '../shared/components/export-button.component';
+import { FilterService } from '../services/filter.service';
+import { ColumnConfig } from '../services/export.service';
 
 @Component({
   selector: 'app-obrigacao-list',
@@ -25,9 +31,14 @@ import { PerfilUsuario } from '../models/auth.model';
     TagModule,
     DropdownModule,
     ToastModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    VirtualScrollerModule,
+    ChipModule,
+    AdvancedFilterComponent,
+    ExportButtonComponent
   ],
   providers: [MessageService, ConfirmationService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <p-toast></p-toast>
     <p-confirmDialog></p-confirmDialog>
@@ -35,38 +46,79 @@ import { PerfilUsuario } from '../models/auth.model';
     <div class="card">
       <div class="flex justify-content-between align-items-center mb-4">
         <h2>Obrigações de Compliance</h2>
-        <p-button
-          *ngIf="canCreate"
-          label="Nova Obrigação"
-          icon="pi pi-plus"
-          (onClick)="novaObrigacao()"
-        ></p-button>
+        <div class="flex gap-2">
+          <p-button
+            label="Filtros Avançados"
+            icon="pi pi-filter"
+            [badge]="activeFiltersCount > 0 ? activeFiltersCount.toString() : ''"
+            badgeClass="p-badge-info"
+            severity="secondary"
+            [outlined]="true"
+            (onClick)="showFilters = true"
+          ></p-button>
+          <app-export-button
+            [data]="obrigacoes"
+            [filename]="'obrigacoes'"
+            [title]="'Obrigações de Compliance'"
+            [columns]="exportColumns"
+          ></app-export-button>
+          <p-button
+            *ngIf="canCreate"
+            label="Nova Obrigação"
+            icon="pi pi-plus"
+            (onClick)="novaObrigacao()"
+          ></p-button>
+        </div>
       </div>
 
-      <div class="mb-3 flex gap-2">
-        <p-dropdown
-          [options]="statusOptions"
-          [(ngModel)]="selectedStatus"
-          placeholder="Filtrar por status"
-          [showClear]="true"
-          (onChange)="loadObrigacoes()"
-        ></p-dropdown>
+      <!-- Filtros Ativos -->
+      <div *ngIf="activeFiltersCount > 0" class="mb-3">
+        <div class="flex align-items-center gap-2 flex-wrap">
+          <span class="text-sm font-semibold">Filtros ativos:</span>
+          <p-chip
+            *ngIf="filters.status"
+            [label]="'Status: ' + getStatusLabel(filters.status)"
+            [removable]="true"
+            (onRemove)="removeFilter('status')"
+          ></p-chip>
+          <p-chip
+            *ngIf="filters.responsavel"
+            [label]="'Responsável: ' + filters.responsavel"
+            [removable]="true"
+            (onRemove)="removeFilter('responsavel')"
+          ></p-chip>
+          <p-chip
+            *ngIf="filters.prazoInicio || filters.prazoFim"
+            [label]="'Prazo: ' + formatDateRange(filters.prazoInicio, filters.prazoFim)"
+            [removable]="true"
+            (onRemove)="removeFilter('prazo')"
+          ></p-chip>
+          <p-button
+            label="Limpar todos"
+            icon="pi pi-times"
+            [text]="true"
+            size="small"
+            (onClick)="clearAllFilters()"
+          ></p-button>
+        </div>
+      </div>
 
-        <p-button
-          label="Atrasadas"
-          icon="pi pi-exclamation-triangle"
-          severity="warning"
-          (onClick)="loadAtrasadas()"
-        ></p-button>
+      <div class="mb-3">
+        <p class="text-color-secondary">
+          <i class="pi pi-info-circle"></i>
+          Exibindo {{ obrigacoes.length }} de {{ totalRecords }} obrigações
+        </p>
       </div>
 
       <p-table
         [value]="obrigacoes"
         [paginator]="true"
-        [rows]="20"
+        [rows]="50"
         [totalRecords]="totalRecords"
         [loading]="loading"
         [lazy]="true"
+        [virtualScroll]="true"
+        [scrollHeight]="'600px'"
         (onLazyLoad)="onPageChange($event)"
         styleClass="p-datatable-sm"
       >
@@ -97,6 +149,7 @@ import { PerfilUsuario } from '../models/auth.model';
                   size="small"
                   [rounded]="true"
                   [text]="true"
+                  aria-label="Visualizar obrigação"
                   (onClick)="visualizar(obrigacao)"
                 ></p-button>
 
@@ -107,6 +160,7 @@ import { PerfilUsuario } from '../models/auth.model';
                   [rounded]="true"
                   [text]="true"
                   severity="success"
+                  aria-label="Submeter obrigação"
                   (onClick)="submeter(obrigacao)"
                 ></p-button>
 
@@ -117,6 +171,7 @@ import { PerfilUsuario } from '../models/auth.model';
                   [rounded]="true"
                   [text]="true"
                   severity="success"
+                  aria-label="Aprovar obrigação"
                   (onClick)="aprovar(obrigacao)"
                 ></p-button>
 
@@ -127,6 +182,7 @@ import { PerfilUsuario } from '../models/auth.model';
                   [rounded]="true"
                   [text]="true"
                   severity="danger"
+                  aria-label="Rejeitar obrigação"
                   (onClick)="rejeitar(obrigacao)"
                 ></p-button>
               </div>
@@ -135,6 +191,16 @@ import { PerfilUsuario } from '../models/auth.model';
         </ng-template>
       </p-table>
     </div>
+
+    <!-- Advanced Filters Sidebar -->
+    <app-advanced-filter
+      [(visible)]="showFilters"
+      [filterConfigs]="filterConfigs"
+      [entityType]="'obrigacoes'"
+      [filters]="filters"
+      (onApply)="applyFilters($event)"
+      (onClear)="clearAllFilters()"
+    ></app-advanced-filter>
   `
 })
 export class ObrigacaoListComponent implements OnInit {
@@ -143,11 +209,76 @@ export class ObrigacaoListComponent implements OnInit {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
+  private filterService = inject(FilterService);
 
   obrigacoes: ObrigacaoResponse[] = [];
   totalRecords = 0;
   loading = false;
   selectedStatus?: StatusObrigacao;
+  showFilters = false;
+
+  // Filtros avançados
+  filters: any = {
+    status: null,
+    responsavel: null,
+    prazoInicio: null,
+    prazoFim: null,
+    criadoInicio: null,
+    criadoFim: null
+  };
+
+  filterConfigs: FilterConfig[] = [
+    {
+      type: 'dropdown',
+      key: 'status',
+      label: 'Status',
+      placeholder: 'Selecione o status',
+      options: [
+        { label: 'Pendente', value: 'PENDENTE' },
+        { label: 'Submetida', value: 'SUBMETIDA' },
+        { label: 'Aprovada', value: 'APROVADA' },
+        { label: 'Rejeitada', value: 'REJEITADA' }
+      ]
+    },
+    {
+      type: 'text',
+      key: 'responsavel',
+      label: 'Responsável',
+      placeholder: 'Nome do responsável'
+    },
+    {
+      type: 'date',
+      key: 'prazoInicio',
+      label: 'Prazo - Data Início',
+      placeholder: 'Selecione a data'
+    },
+    {
+      type: 'date',
+      key: 'prazoFim',
+      label: 'Prazo - Data Fim',
+      placeholder: 'Selecione a data'
+    },
+    {
+      type: 'dateRange',
+      key: 'criadoRange',
+      label: 'Período de Criação',
+      placeholder: 'Selecione o período'
+    }
+  ];
+
+  exportColumns: ColumnConfig[] = [
+    { field: 'obrigacaoId', header: 'ID', width: 10 },
+    { field: 'titulo', header: 'Título', width: 40 },
+    { field: 'status', header: 'Status', width: 15 },
+    { field: 'responsavelNome', header: 'Responsável', width: 30 },
+    {
+      field: 'prazoExecucao',
+      header: 'Prazo',
+      width: 20,
+      format: (value) => value ? new Date(value).toLocaleDateString('pt-BR') : ''
+    }
+  ];
 
   statusOptions = [
     { label: 'Pendente', value: StatusObrigacao.PENDENTE },
@@ -155,6 +286,10 @@ export class ObrigacaoListComponent implements OnInit {
     { label: 'Aprovada', value: StatusObrigacao.APROVADA },
     { label: 'Rejeitada', value: StatusObrigacao.REJEITADA }
   ];
+
+  get activeFiltersCount(): number {
+    return this.filterService.countActiveFilters(this.filters);
+  }
 
   get canCreate(): boolean {
     return this.authService.hasAnyRole([PerfilUsuario.ROLE_COMPLIANCE, PerfilUsuario.ROLE_ADMIN]);
@@ -166,15 +301,17 @@ export class ObrigacaoListComponent implements OnInit {
 
   loadObrigacoes(page: number = 0): void {
     this.loading = true;
+    this.cdr.markForCheck();
     this.obrigacaoService.listar(
       this.selectedStatus ? { status: this.selectedStatus } : undefined,
       page,
-      20
+      50
     ).subscribe({
       next: (response) => {
         this.obrigacoes = response.content;
         this.totalRecords = response.totalElements;
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.messageService.add({
@@ -183,17 +320,20 @@ export class ObrigacaoListComponent implements OnInit {
           detail: 'Erro ao carregar obrigações'
         });
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }
 
   loadAtrasadas(): void {
     this.loading = true;
+    this.cdr.markForCheck();
     this.obrigacaoService.buscarAtrasadas().subscribe({
       next: (obrigacoes) => {
         this.obrigacoes = obrigacoes;
         this.totalRecords = obrigacoes.length;
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.messageService.add({
@@ -202,6 +342,7 @@ export class ObrigacaoListComponent implements OnInit {
           detail: 'Erro ao carregar obrigações atrasadas'
         });
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -311,5 +452,47 @@ export class ObrigacaoListComponent implements OnInit {
       [StatusObrigacao.REJEITADA]: 'danger'
     };
     return severityMap[status];
+  }
+
+  trackByObrigacaoId(index: number, item: ObrigacaoResponse): number {
+    return item.obrigacaoId;
+  }
+
+  applyFilters(filters: any): void {
+    this.filters = filters;
+    this.loadObrigacoes();
+    this.cdr.markForCheck();
+  }
+
+  removeFilter(filterKey: string): void {
+    if (filterKey === 'prazo') {
+      this.filters.prazoInicio = null;
+      this.filters.prazoFim = null;
+    } else {
+      this.filters[filterKey] = null;
+    }
+    this.loadObrigacoes();
+    this.cdr.markForCheck();
+  }
+
+  clearAllFilters(): void {
+    this.filters = this.filterService.clearFilters(this.filters);
+    this.selectedStatus = undefined;
+    this.loadObrigacoes();
+    this.cdr.markForCheck();
+  }
+
+  getStatusLabel(status: string): string {
+    const option = this.statusOptions.find(opt => opt.value === status);
+    return option?.label || status;
+  }
+
+  formatDateRange(inicio: Date | null, fim: Date | null): string {
+    if (!inicio && !fim) return '';
+    const formatDate = (date: Date) => new Date(date).toLocaleDateString('pt-BR');
+    if (inicio && fim) return `${formatDate(inicio)} - ${formatDate(fim)}`;
+    if (inicio) return `A partir de ${formatDate(inicio)}`;
+    if (fim) return `Até ${formatDate(fim)}`;
+    return '';
   }
 }

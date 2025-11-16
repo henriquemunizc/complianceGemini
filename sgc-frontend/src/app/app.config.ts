@@ -1,11 +1,12 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withPreloading } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { jwtInterceptor } from './interceptors/jwt.interceptor';
 import { loadingInterceptor } from './interceptors/loading.interceptor';
 import { errorInterceptor } from './interceptors/error.interceptor';
 import { MessageService } from 'primeng/api';
+import { SelectivePreloadStrategy } from './strategies/selective-preload.strategy';
 
 import { authGuard } from './guards/auth.guard';
 
@@ -24,12 +25,14 @@ export const appConfig: ApplicationConfig = {
         children: [
           {
             path: 'dashboard',
-            loadComponent: () => import('./components/dashboard.component').then(m => m.DashboardComponent)
+            loadComponent: () => import('./components/dashboard.component').then(m => m.DashboardComponent),
+            data: { preload: true }
           },
           // Rotas de Normas
           {
             path: 'normas',
-            loadComponent: () => import('./components/norma-list.component').then(m => m.NormaListComponent)
+            loadComponent: () => import('./components/norma-list.component').then(m => m.NormaListComponent),
+            data: { preload: true }
           },
           {
             path: 'normas/nova',
@@ -46,7 +49,8 @@ export const appConfig: ApplicationConfig = {
           // Rotas de Obrigações
           {
             path: 'obrigacoes',
-            loadComponent: () => import('./components/obrigacao-list.component').then(m => m.ObrigacaoListComponent)
+            loadComponent: () => import('./components/obrigacao-list.component').then(m => m.ObrigacaoListComponent),
+            data: { preload: true }
           },
           {
             path: 'obrigacoes/nova',
@@ -75,13 +79,14 @@ export const appConfig: ApplicationConfig = {
           }
         ]
       }
-    ]),
+    ], withPreloading(SelectivePreloadStrategy)),
     provideHttpClient(withInterceptors([
       jwtInterceptor,
       loadingInterceptor,
       errorInterceptor
     ])),
     provideAnimations(),
-    MessageService
+    MessageService,
+    SelectivePreloadStrategy
   ]
 };

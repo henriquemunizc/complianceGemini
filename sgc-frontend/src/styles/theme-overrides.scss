@@ -1,0 +1,645 @@
+/**
+ * PrimeNG Theme Overrides
+ * Customização profissional dos componentes PrimeNG
+ */
+
+/* ========================================
+   VARIÁVEIS PRIMENG - OVERRIDE
+   ======================================== */
+
+:root {
+  /* Primary Color */
+  --primary-color: var(--color-primary);
+  --primary-color-text: #ffffff;
+
+  /* Surface */
+  --surface-ground: var(--color-background-light);
+  --surface-section: var(--color-background);
+  --surface-card: var(--color-background);
+  --surface-overlay: var(--color-background);
+  --surface-border: var(--color-border-light);
+
+  /* Text */
+  --text-color: var(--color-text-primary);
+  --text-color-secondary: var(--color-text-secondary);
+
+  /* Mask */
+  --maskbg: rgba(0, 0, 0, 0.4);
+
+  /* Font */
+  --font-family: var(--font-family-primary);
+
+  /* Border Radius */
+  --border-radius: var(--radius-sm);
+
+  /* Focus */
+  --focus-ring: 0 0 0 0.2rem rgba(0, 82, 204, 0.2);
+}
+
+/* ========================================
+   BUTTONS - Estilo Profissional
+   ======================================== */
+
+.p-button {
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-sm);
+  padding: 0.625rem 1.25rem;
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
+
+  &:hover:not(:disabled) {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+  }
+
+  &:focus {
+    box-shadow: var(--focus-ring), var(--shadow-sm);
+  }
+
+  /* Primary Button */
+  &.p-button-primary {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+
+    &:hover:not(:disabled) {
+      background: var(--color-primary-dark);
+      border-color: var(--color-primary-dark);
+    }
+  }
+
+  /* Success Button */
+  &.p-button-success {
+    background: var(--color-success);
+    border-color: var(--color-success);
+
+    &:hover:not(:disabled) {
+      background: var(--color-success-dark);
+      border-color: var(--color-success-dark);
+    }
+  }
+
+  /* Warning Button */
+  &.p-button-warning {
+    background: var(--color-warning);
+    border-color: var(--color-warning);
+
+    &:hover:not(:disabled) {
+      background: var(--color-warning-dark);
+      border-color: var(--color-warning-dark);
+    }
+  }
+
+  /* Danger Button */
+  &.p-button-danger {
+    background: var(--color-danger);
+    border-color: var(--color-danger);
+
+    &:hover:not(:disabled) {
+      background: var(--color-danger-dark);
+      border-color: var(--color-danger-dark);
+    }
+  }
+
+  /* Secondary Button */
+  &.p-button-secondary {
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
+
+    &:hover:not(:disabled) {
+      background: var(--color-secondary-dark);
+      border-color: var(--color-secondary-dark);
+    }
+  }
+
+  /* Outlined Buttons */
+  &.p-button-outlined {
+    background: transparent;
+    box-shadow: none;
+    border-width: 2px;
+
+    &:hover:not(:disabled) {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  /* Text Buttons */
+  &.p-button-text {
+    box-shadow: none;
+
+    &:hover:not(:disabled) {
+      box-shadow: none;
+      transform: none;
+    }
+  }
+
+  /* Icon Only */
+  &.p-button-icon-only {
+    padding: 0.625rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  /* Small Button */
+  &.p-button-sm {
+    font-size: var(--font-size-xs);
+    padding: 0.5rem 1rem;
+  }
+
+  /* Large Button */
+  &.p-button-lg {
+    font-size: var(--font-size-base);
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+/* ========================================
+   CARDS - Estilo Elevado
+   ======================================== */
+
+.p-card {
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border-light);
+  transition: all var(--transition-base);
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .p-card-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .p-card-subtitle {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .p-card-content {
+    padding: var(--spacing-xl);
+  }
+
+  .p-card-footer {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    border-top: 1px solid var(--color-border-light);
+    background: var(--color-background-light);
+  }
+}
+
+/* ========================================
+   TABLES - Estilo Enterprise
+   ======================================== */
+
+.p-datatable {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border-light);
+
+  .p-datatable-thead > tr > th {
+    background: var(--color-background-medium);
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-lg);
+    border-bottom: 2px solid var(--color-border-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .p-datatable-tbody > tr {
+    transition: all var(--transition-fast);
+
+    &:hover {
+      background: var(--color-background-light);
+    }
+
+    > td {
+      padding: var(--spacing-lg);
+      font-size: var(--font-size-sm);
+      border-bottom: 1px solid var(--color-border-light);
+    }
+  }
+
+  .p-datatable-emptymessage > td {
+    text-align: center;
+    padding: var(--spacing-3xl);
+    color: var(--color-text-tertiary);
+  }
+}
+
+/* ========================================
+   FORMS - Input Profissional
+   ======================================== */
+
+.p-inputtext,
+.p-dropdown,
+.p-multiselect,
+.p-calendar,
+.p-inputnumber-input {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-sm);
+  padding: 0.625rem 0.875rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-medium);
+  transition: all var(--transition-base);
+
+  &:enabled:hover {
+    border-color: var(--color-primary-light);
+  }
+
+  &:enabled:focus {
+    border-color: var(--color-primary);
+    box-shadow: var(--focus-ring);
+  }
+
+  &.ng-invalid.ng-dirty {
+    border-color: var(--color-danger);
+
+    &:enabled:focus {
+      box-shadow: 0 0 0 0.2rem rgba(222, 53, 11, 0.2);
+    }
+  }
+}
+
+.p-float-label > label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.p-input-icon-left > .p-inputtext {
+  padding-left: 2.5rem;
+}
+
+.p-input-icon-right > .p-inputtext {
+  padding-right: 2.5rem;
+}
+
+/* ========================================
+   DIALOGS / MODALS
+   ======================================== */
+
+.p-dialog {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2xl);
+  border: none;
+
+  .p-dialog-header {
+    padding: var(--spacing-xl);
+    border-bottom: 1px solid var(--color-border-light);
+    background: var(--color-background-light);
+
+    .p-dialog-title {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+
+    .p-dialog-header-icon {
+      width: 2rem;
+      height: 2rem;
+      color: var(--color-text-tertiary);
+
+      &:hover {
+        color: var(--color-text-primary);
+        background: var(--color-neutral-200);
+      }
+    }
+  }
+
+  .p-dialog-content {
+    padding: var(--spacing-xl);
+    color: var(--color-text-primary);
+  }
+
+  .p-dialog-footer {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    border-top: 1px solid var(--color-border-light);
+    background: var(--color-background-light);
+
+    button {
+      margin: 0 0.25rem;
+    }
+  }
+}
+
+.p-dialog-mask {
+  background-color: rgba(9, 30, 66, 0.54);
+  backdrop-filter: blur(2px);
+}
+
+/* ========================================
+   TOAST / MENSAGENS
+   ======================================== */
+
+.p-toast {
+  .p-toast-message {
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    border-left-width: 6px;
+
+    &.p-toast-message-success {
+      background: var(--color-success-lightest);
+      border-color: var(--color-success);
+
+      .p-toast-message-icon,
+      .p-toast-summary {
+        color: var(--color-success-dark);
+      }
+    }
+
+    &.p-toast-message-info {
+      background: var(--color-info-lightest);
+      border-color: var(--color-info);
+
+      .p-toast-message-icon,
+      .p-toast-summary {
+        color: var(--color-info-dark);
+      }
+    }
+
+    &.p-toast-message-warn {
+      background: var(--color-warning-lightest);
+      border-color: var(--color-warning);
+
+      .p-toast-message-icon,
+      .p-toast-summary {
+        color: var(--color-warning-dark);
+      }
+    }
+
+    &.p-toast-message-error {
+      background: var(--color-danger-lightest);
+      border-color: var(--color-danger);
+
+      .p-toast-message-icon,
+      .p-toast-summary {
+        color: var(--color-danger-dark);
+      }
+    }
+
+    .p-toast-summary {
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .p-toast-detail {
+      color: var(--color-text-secondary);
+    }
+  }
+}
+
+/* ========================================
+   DROPDOWN / SELECT
+   ======================================== */
+
+.p-dropdown-panel,
+.p-multiselect-panel {
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border-light);
+  margin-top: 0.25rem;
+
+  .p-dropdown-items,
+  .p-multiselect-items {
+    padding: 0.25rem;
+
+    .p-dropdown-item,
+    .p-multiselect-item {
+      border-radius: var(--radius-xs);
+      padding: 0.625rem 0.875rem;
+      font-size: var(--font-size-sm);
+      transition: all var(--transition-fast);
+
+      &:hover {
+        background: var(--color-primary-lightest);
+        color: var(--color-primary-dark);
+      }
+
+      &.p-highlight {
+        background: var(--color-primary);
+        color: white;
+      }
+    }
+  }
+}
+
+/* ========================================
+   MENU / MENUBAR
+   ======================================== */
+
+.p-menubar {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-light);
+  background: var(--color-background);
+  padding: 0.5rem;
+
+  .p-menuitem-link {
+    border-radius: var(--radius-xs);
+    padding: 0.625rem 0.875rem;
+    transition: all var(--transition-fast);
+
+    &:hover {
+      background: var(--color-background-light);
+    }
+
+    &:focus {
+      box-shadow: var(--focus-ring);
+    }
+  }
+}
+
+/* ========================================
+   PAGINATION
+   ======================================== */
+
+.p-paginator {
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  background: var(--color-background-light);
+
+  .p-paginator-pages {
+    .p-paginator-page {
+      border-radius: var(--radius-xs);
+      min-width: 2.5rem;
+      height: 2.5rem;
+      transition: all var(--transition-fast);
+
+      &:hover {
+        background: var(--color-neutral-200);
+      }
+
+      &.p-highlight {
+        background: var(--color-primary);
+        color: white;
+      }
+    }
+  }
+}
+
+/* ========================================
+   CHIPS / BADGES
+   ======================================== */
+
+.p-chip {
+  border-radius: var(--radius-full);
+  padding: 0.375rem 0.875rem;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.p-badge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  min-width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  border-radius: var(--radius-full);
+
+  &.p-badge-success { background: var(--color-success); }
+  &.p-badge-info { background: var(--color-info); }
+  &.p-badge-warning { background: var(--color-warning); }
+  &.p-badge-danger { background: var(--color-danger); }
+}
+
+/* ========================================
+   PROGRESS BAR
+   ======================================== */
+
+.p-progressbar {
+  border-radius: var(--radius-full);
+  height: 0.5rem;
+  background: var(--color-neutral-200);
+
+  .p-progressbar-value {
+    border-radius: var(--radius-full);
+    background: var(--color-primary);
+    transition: width var(--transition-slow);
+  }
+}
+
+/* ========================================
+   TABS
+   ======================================== */
+
+.p-tabview {
+  .p-tabview-nav {
+    border-bottom: 2px solid var(--color-border-light);
+    background: transparent;
+
+    li {
+      .p-tabview-nav-link {
+        border: none;
+        border-bottom: 2px solid transparent;
+        border-radius: 0;
+        padding: var(--spacing-lg) var(--spacing-xl);
+        font-weight: var(--font-weight-medium);
+        color: var(--color-text-secondary);
+        transition: all var(--transition-base);
+
+        &:hover {
+          background: var(--color-background-light);
+          color: var(--color-text-primary);
+        }
+      }
+
+      &.p-highlight .p-tabview-nav-link {
+        border-bottom-color: var(--color-primary);
+        color: var(--color-primary);
+        background: transparent;
+      }
+    }
+  }
+
+  .p-tabview-panels {
+    padding: var(--spacing-xl);
+    background: var(--color-background);
+  }
+}
+
+/* ========================================
+   ACCORDION
+   ======================================== */
+
+.p-accordion {
+  .p-accordion-header {
+    .p-accordion-header-link {
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-lg);
+      font-weight: var(--font-weight-medium);
+      transition: all var(--transition-base);
+
+      &:hover {
+        background: var(--color-background-light);
+      }
+    }
+  }
+
+  .p-accordion-content {
+    padding: var(--spacing-xl);
+  }
+}
+
+/* ========================================
+   PANEL
+   ======================================== */
+
+.p-panel {
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border-light);
+
+  .p-panel-header {
+    background: var(--color-background-light);
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--color-border-light);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+  }
+
+  .p-panel-content {
+    padding: var(--spacing-xl);
+  }
+}
+
+/* ========================================
+   TOOLTIP
+   ======================================== */
+
+.p-tooltip {
+  .p-tooltip-text {
+    background: var(--color-neutral-900);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    box-shadow: var(--shadow-lg);
+  }
+
+  &.p-tooltip-top .p-tooltip-arrow {
+    border-top-color: var(--color-neutral-900);
+  }
+
+  &.p-tooltip-bottom .p-tooltip-arrow {
+    border-bottom-color: var(--color-neutral-900);
+  }
+
+  &.p-tooltip-left .p-tooltip-arrow {
+    border-left-color: var(--color-neutral-900);
+  }
+
+  &.p-tooltip-right .p-tooltip-arrow {
+    border-right-color: var(--color-neutral-900);
+  }
+}
